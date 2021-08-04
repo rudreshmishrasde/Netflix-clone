@@ -3,7 +3,7 @@ import React , {useState , useEffect} from 'react'  // install ES7 to use snippe
  import axios from '../axios';
  import './Rows.css';
  import Youtube from 'react-youtube';
- import movieTrailer from 'movie-trailer';
+
 
 
  const base_url = "https://image.tmdb.org/t/p/original/";
@@ -32,16 +32,16 @@ function Rows({title , fetchUrl , isLargeRow} ){
          autoplay : 2,
         },
       };
-        const handleClick = (movie) =>{
-           if(trailerUrl){
-           setTrailerUrl('');
-           }else
-           movieTrailer(movie?.name || '')
-           .then(url=>{
-              const urlParams =new URLSearchParams( new URL(url).search);
-              setTrailerUrl(urlParams.get('v'));
-           }).catch(error => console.log(error))
+      const handleClick = async (movie) => {
+        if (trailerUrl) {
+          setTrailerUrl('');
+        } else {
+          let trailerurl = await axios.get(
+            `/movie/${movie.id}/videos?api_key=78e34bf3fa17fdace9359b58c2305b29`
+          );
+          setTrailerUrl(trailerurl.data.results[0]?.key);
         }
+      };
 
       
     return(
